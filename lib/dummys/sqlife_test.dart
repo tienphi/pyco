@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:pyco/database/remote/app_exception.dart';
 import 'package:pyco/models/person.dart';
 import 'package:pyco/view_models/person.dart';
+import 'package:pyco/views/widgets/person_info_item.dart';
 
 class SqlifeTest extends StatelessWidget {
   @override
@@ -34,12 +35,16 @@ class SqlifeTest extends StatelessWidget {
 
             final people = snapshot.data;
 
-            return ListView.builder(
-              itemCount: people.length,
-              itemBuilder: (ctx, index) =>
-                  Text(people[index].personName.personNameToCall),
-//                  Text('A'),
+            return PersonInfoItem(
+              person: people[0],
             );
+
+//            return ListView.builder(
+//              itemCount: people.length,
+//              itemBuilder: (ctx, index) =>
+//                  Text(people[index].personName.personNameToCall),
+////                  Text('A'),
+//            );
           },
 //          child: Text('Sqlite Screen comming soon ...'),
         ),
