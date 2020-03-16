@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pyco/dummys/sqlife_test.dart';
 import 'package:pyco/views/screens/favorite_screen.dart';
 import 'package:pyco/views/screens/people_carousel_screen.dart';
 
@@ -39,7 +40,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
       _pageList = [
         {
-          PAGE_BODY_KEY: PeopleCarouselScreen(),
+          PAGE_BODY_KEY: SqlifeTest(),
           PAGE_ICON_KEY: Icons.home,
           PAGE_BOTTOM_NAVIGATION_TITLE_KEY: 'People carousel',
         },
@@ -72,10 +73,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       String title,
     }) {
       return BottomNavigationBarItem(
-//        icon: SvgPicture.asset(
-//          iconName,
-//          color: _isAtPageIndex(index) ? _activeColor : _inActiveColor,
-//        ),
         icon: Icon(
           iconData,
           color: _isAtPageIndex(index) ? _activeColor : _inActiveColor,

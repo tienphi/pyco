@@ -26,9 +26,49 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          // Dialog theme
+          dialogTheme: Theme
+              .of(context)
+              .dialogTheme
+              .copyWith(
+            titleTextStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            contentTextStyle: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
+          ),
+
+          // Text theme
+          textTheme: Theme
+              .of(context)
+              .textTheme
+              .copyWith(
+            // Title of appbar
+            headline: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+
+            // Person info content
+            title: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+
+            // Normal text
+            body1: TextStyle(
+              fontSize: 14,
+            ),
+          ),
         ),
         home: BottomNavigationScreen(),
       ),
