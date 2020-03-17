@@ -6,6 +6,7 @@ import 'package:pyco/view_models/person.dart';
 import 'package:pyco/views/widgets/person_info_item.dart';
 
 class SqlifeTest extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
 //    return Scaffold(
@@ -35,9 +36,30 @@ class SqlifeTest extends StatelessWidget {
 
             final people = snapshot.data;
 
-            return PersonInfoItem(
+            final widget = PersonInfoItem(
               person: people[0],
             );
+
+            return Dismissible(
+              key: ValueKey(people[0].id),
+              background: Container(),
+              onDismissed: (direction) {
+                if (direction == DismissDirection.endToStart) {
+                  print('Drag left');
+                } else if (direction == DismissDirection.startToEnd) {
+                  print('Drag right');
+                }
+              },
+              child: widget,
+            );
+
+//            return Draggable(
+//              feedback: widget,
+//              onDragEnd: (draggableDetails) =>
+//                  _handlerSwiped(context, draggableDetails),
+//              childWhenDragging: Container(),
+//              child: widget,
+//            );
 
 //            return ListView.builder(
 //              itemCount: people.length,

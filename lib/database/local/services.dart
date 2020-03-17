@@ -67,7 +67,7 @@ class SQLiteService {
     @required Database database,
     @required String dbName,
     @required String idColumn,
-    @required int id,
+    @required String id,
   }) async {
     return await database
         .delete(dbName, where: '$idColumn = ?', whereArgs: [id]);
