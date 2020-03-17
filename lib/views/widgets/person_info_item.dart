@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pyco/constants.dart';
 import 'package:pyco/models/person.dart';
 import 'package:pyco/views/utilities.dart';
 import 'package:pyco/views/widgets/person_info_icons.dart';
@@ -93,7 +94,7 @@ class _PersonInfoItemState extends State<PersonInfoItem> {
   Widget build(BuildContext context) {
     final deviceWidth = getWidth(context);
     final itemWidth = deviceWidth * 0.8;
-    final itemHeight = 401.0;
+    final itemHeight = APP_PERSON_ITEM_HEIGHT;
     final avatarWidth = deviceWidth * 0.4;
 
     return Container(
@@ -102,8 +103,12 @@ class _PersonInfoItemState extends State<PersonInfoItem> {
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
+          side: BorderSide(
+            color: Colors.black,
+            width: 1.0,
+          ),
         ),
-        elevation: 8.0,
+        elevation: 0,
         child: Stack(
           children: <Widget>[
             Column(

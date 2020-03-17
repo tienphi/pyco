@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pyco/database/local/database_creator.dart';
+import 'package:pyco/database/local/person_services.dart';
 import 'package:pyco/database/local/services.dart';
 import 'package:pyco/database/remote/app_exception.dart';
 import 'package:pyco/database/remote/reponse_handler.dart';
@@ -40,10 +41,11 @@ class PersonViewModel with ChangeNotifier {
 
   Future<List<Person>> getPeopleFromLocalDatabase() async {
     try {
-      return await SQLiteService.getAll<Person>(
+      final people = await SQLiteService.getAll<Person>(
         database: personDb,
         dbName: PERSON_TABLE,
       );
+      return people;
     } catch (e) {
       throw e;
     }
@@ -62,6 +64,34 @@ class PersonViewModel with ChangeNotifier {
       return people;
     } catch (e) {
       throw e;
+    }
+  }
+
+  Future<int> updateToFavorite(String personId, [bool value = true]) async {
+    try {
+      await updatePersonFavoriteStateAtLocal(
+        id: personId,
+        isFavorite: value ?? true,
+      );
+      notifyListeners();
+      return 1;
+    } catch (e) {
+      return -1;
+    }
+  }
+
+  Future<bool> deleteItem(String personId) async {
+    try {
+      await SQLiteService.deleteItemById<Person>(
+        database: personDb,
+        dbName: PERSON_TABLE,
+        idColumn: PERSON_TABLE_ID_COLUMN,
+        id: personId,
+      );
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

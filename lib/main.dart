@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
+          // Scaffold color
+          scaffoldBackgroundColor: Color(0xFFF2FCF1),
           // Dialog theme
           dialogTheme: Theme
               .of(context)
