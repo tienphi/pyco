@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pyco/constants.dart';
 import 'package:pyco/models/person.dart';
 import 'package:pyco/views/utilities.dart';
 import 'package:pyco/views/widgets/person_info_icons.dart';
+
+import '../utilities.dart';
 
 class PersonInfoItem extends StatefulWidget {
   final Person person;
@@ -94,7 +95,7 @@ class _PersonInfoItemState extends State<PersonInfoItem> {
   Widget build(BuildContext context) {
     final deviceWidth = getWidth(context);
     final itemWidth = deviceWidth * 0.8;
-    final itemHeight = APP_PERSON_ITEM_HEIGHT;
+    final itemHeight = getHeight(context) * 0.6;
     final avatarWidth = deviceWidth * 0.4;
 
     return Container(
@@ -122,14 +123,14 @@ class _PersonInfoItemState extends State<PersonInfoItem> {
                     ),
                     color: Color(0xFFF7EEEE),
                   ),
-                  height: 150,
+                  height: itemHeight * 0.37,
                 ),
                 Divider(
                   height: 1,
                   color: Colors.black,
                 ),
                 Container(
-                  height: 240,
+                  height: itemHeight * 0.6,
                   color: Colors.white,
                   child: LayoutBuilder(
                     builder: (ctx, constraints) {

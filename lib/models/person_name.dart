@@ -8,7 +8,7 @@ part 'person_name.g.dart';
 @JsonSerializable(explicitToJson: true)
 class PersonName extends BaseModel {
   @override
-  @JsonKey(defaultValue: '-1')
+  @JsonKey(ignore: true)
   String id;
 
   @JsonKey(name: 'title', defaultValue: '')
@@ -45,7 +45,7 @@ class PersonName extends BaseModel {
   @override
   Map<String, dynamic> toJson() => _$PersonNameToJson(this);
 
-  Map<String, dynamic> toJsonToSaveDatabase(String id) {
+  Map<String, dynamic> toJsonToSaveDatabase() {
     final jsonData = _$PersonNameToJson(this);
     final Map<String, dynamic> result = {};
     jsonData.keys.forEach((key) {
@@ -62,7 +62,7 @@ class PersonName extends BaseModel {
           }
         case 'last':
           {
-            result[PERSON_TABLE_LAST_NAME_COLUMN] = '${jsonData[key]} #$id';
+            result[PERSON_TABLE_LAST_NAME_COLUMN] = '${jsonData[key]}';
             break;
           }
         default:

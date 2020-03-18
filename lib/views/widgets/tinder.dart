@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:pyco/constants.dart';
 import 'package:pyco/input.dart';
 import 'package:pyco/models/person.dart';
 import 'package:pyco/view_models/person.dart';
@@ -9,6 +8,7 @@ import 'package:pyco/views/utilities.dart';
 import 'package:pyco/views/widgets/person_info_item.dart';
 
 import '../../database/remote/app_exception.dart';
+import '../utilities.dart';
 
 const _PERSON_KEY = 'person';
 const _POSITION_KEY = 'positon';
@@ -45,33 +45,35 @@ class _PeopleTinderState extends State<PeopleTinder> {
     });
   }
 
-  void onDragLeft(Person person, bool isCallAPI) async {
-    print('left person : ${person.id}');
-    if (isCallAPI) {
-      print('lCall API : ${person.personName.personName}');
-      // TODO FIX USE REAL DATA
-      try {
-        isLoading = true;
-        final people = await _viewModel.getPeople();
-        isLoading = false;
-        print('last person : ${people.last.id}');
-        createBuildDataFromList(_buildData, people);
-      } catch (e) {
-        isLoading = false;
-        showDialogErrorWithMessage(
-          context: context,
-          message: (e as AppException).message,
-        );
-        throw e;
-      }
-    } else {
-      print('Not Call API : ${person.personName.personName}');
+  void getNewPerson() async {
+    try {
+      isLoading = true;
+      final people = await _viewModel.getPeople();
+      isLoading = false;
+      print('last person : ${people.last.id}');
+      createBuildDataFromList(_buildData, people);
+    } catch (e) {
+      isLoading = false;
+      showDialogErrorWithMessage(
+        context: context,
+        message: (e as AppException).message,
+      );
+      throw e;
     }
   }
 
-  void onDragRight(Person person) {
-    print('rifgnh person : ${person.id}');
+  void onDragLeft(Person person, bool isCallAPI) {
+    if (isCallAPI) {
+      getNewPerson();
+    }
+  }
+
+  void onDragRight(Person person, bool isCallAPI) {
     _viewModel.updateToFavorite(person.id);
+
+    if (isCallAPI) {
+      getNewPerson();
+    }
   }
 
   void createBuildDataFromList(
@@ -140,7 +142,10 @@ class _PeopleTinderState extends State<PeopleTinder> {
 
               onDragLeft(person, isCallAPI);
             } else if (direction == DismissDirection.startToEnd) {
-              onDragRight(person);
+              final isCallAPI = identical(
+                  _buildData.reversed.last[_PERSON_KEY] as Person, person);
+
+              onDragRight(person, isCallAPI);
             }
           },
           child: PersonInfoItem(
@@ -161,7 +166,7 @@ class _PeopleTinderState extends State<PeopleTinder> {
           Positioned(
             top: item[_POSITION_KEY] == 0
                 ? 0
-                : APP_PERSON_ITEM_HEIGHT * _marginTopRadio,
+                : getHeight(context) * 0.6 * _marginTopRadio,
             left: item[_POSITION_KEY] == 0
                 ? 0
                 : _personItemWidth * _marginLeftRadio,
@@ -180,12 +185,20 @@ class _PeopleTinderState extends State<PeopleTinder> {
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
+        ? Container(
+            height: getHeight(context) * 0.6 * (1 + 2 * _marginTopRadio),
+            width: getWidth(context) * 0.8 * (1 + 2 * _marginLeftRadio),
+            child: Center(
+              child: Container(
+                width: 40,
+                height: 40,
+                child: CircularProgressIndicator(),
+              ),
+            ),
           )
         : Center(
             child: Container(
-              height: APP_PERSON_ITEM_HEIGHT * (1 + 2 * _marginTopRadio),
+              height: getHeight(context) * 0.6 * (1 + 2 * _marginTopRadio),
               child: Stack(
                 children: _buildTinder(context),
               ),

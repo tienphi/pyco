@@ -7,7 +7,7 @@ part 'location.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Location extends BaseModel {
   @override
-  @JsonKey(defaultValue: '-1')
+  @JsonKey(ignore: true)
   String id;
 
   @JsonKey(name: 'street', defaultValue: '')

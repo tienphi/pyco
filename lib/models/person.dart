@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pyco/bases/model.dart';
 import 'package:pyco/input.dart';
@@ -25,7 +23,7 @@ const PERSON_TABLE_IS_FAVORITE_COLUMN = 'is_favorite';
 @JsonSerializable(explicitToJson: true)
 class Person extends BaseModel {
   @override
-  @JsonKey(name: 'md5', defaultValue: 'Unknown')
+  @JsonKey(ignore: true)
   String id;
 
   String get idToDisplay => id ?? 'Unknown';
@@ -162,22 +160,18 @@ class Person extends BaseModel {
   Map<String, dynamic> toJson() => _$PersonToJson(this);
 
   Map<String, dynamic> toJsonSaveLocalDatabase() {
-    Map<String, dynamic> result = {};
+    Map<String, dynamic> result = {
+      PERSON_TABLE_ID_COLUMN: this.id,
+    };
     final jsonData = _$PersonToJson(this);
     final jsonDataKeys = jsonData.keys;
-    final personId = Random().nextInt(100).toString();
 
-    final jsonName = personName.toJsonToSaveDatabase(personId);
+    final jsonName = personName.toJsonToSaveDatabase();
     final jsonLocation = location.toJsonToSaveDatabase();
 
     jsonDataKeys.forEach(
       (key) {
         switch (key) {
-          case 'md5':
-            {
-              result[PERSON_TABLE_ID_COLUMN] = jsonData[key];
-              break;
-            }
           case 'isFavorite':
             {
               final isFavorite = jsonData[key] as bool;
@@ -205,7 +199,6 @@ class Person extends BaseModel {
       },
     );
 
-    result[PERSON_TABLE_ID_COLUMN] = personId;
     return result;
   }
 }
