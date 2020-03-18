@@ -43,6 +43,7 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
     try {
       final newPeopleData = await _viewModel.getPeople();
       setPeopleAndLoading(newPeopleData, true);
+      isLoading = false;
     } catch (e) {
       showDialogErrorWithMessage(
         context: context,
@@ -79,7 +80,6 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
   }
 
   Widget _buildContentWhenHasData(List<Person> people) {
-    final favoritePeople = people.where((person) => person.isFavorite).toList();
     return _people.isEmpty
         ? Center(
             child: Column(
@@ -87,7 +87,7 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
               children: <Widget>[
                 Text('Nobody to display!'),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 RaisedButton(
                   child: Text('Retry'),
@@ -100,34 +100,12 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      Icons.person,
-                      color: Colors.blueAccent,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text('${people.length}'),
-                    SizedBox(
-                      width: 100,
-                    ),
-                    Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text('${favoritePeople.length}'),
-                  ],
-                ),
+                Text(
+                    'Swipe to show new person, swipe right to add to favorite list'),
                 SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 PeopleTinder(
                   initPeopleData: _people,

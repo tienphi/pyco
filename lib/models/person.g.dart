@@ -18,11 +18,10 @@ Person _$PersonFromJson(Map<String, dynamic> json) {
         Person._personNameFromJson(json['name'] as Map<String, dynamic>),
     location:
         Person._locationFromJson(json['location'] as Map<String, dynamic>),
-  )..id = json['md5'] as String ?? 'Unknown';
+  );
 }
 
 Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
-      'md5': instance.id,
       'picture': instance.picture,
       'gender': instance.gender,
       'phone': instance.phone,

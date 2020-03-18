@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:pyco/database/remote/http_client.dart';
@@ -46,7 +47,6 @@ class PersonService {
                       if (item[key] is Map<String, dynamic>) {
                         jsonFix['username'] = item[key]['username'];
                         jsonFix['salt'] = item[key]['salt'];
-                        jsonFix['md5'] = item[key]['md5'];
                       }
                       break;
                     }
@@ -59,7 +59,7 @@ class PersonService {
                     }
                   default:
                     {
-                      if (item[key] is Map<String, dynamic>) {
+                      if (item is Map<String, dynamic>) {
                         jsonFix[key] = item[key];
                       }
                     }
@@ -72,7 +72,14 @@ class PersonService {
             List<Person> people = [];
 
             listJsonFix.forEach((map) {
-              people.add(Person.fromJson(map));
+              final personId = Random().nextInt(100).toString();
+
+              final person = Person.fromJson(map);
+              person.id = personId;
+              person.personName.lastName =
+                  '${person.personName.lastName} #$personId';
+
+              people.add(person);
             });
             responseHandler.onResponseSuccess(people);
           } else {
