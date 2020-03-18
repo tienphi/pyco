@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pyco/database/local/database_creator.dart';
 import 'package:pyco/database/local/person_services.dart';
@@ -24,11 +26,11 @@ class PersonViewModel with ChangeNotifier {
   }
 
   Future<List<Person>> getPeopleFromServer() async {
-    List<Person> result = [];
+    Completer<List<Person>> result = Completer<List<Person>>();
     await PersonService().getPeopleAPI(
       responseHandler: ResponseHandler(
         onResponseSuccess: (data) {
-          result = data as List<Person>;
+          result.complete(data as List<Person>);
         },
         onResponseError: (AppException e) {
           throw e;
@@ -36,7 +38,7 @@ class PersonViewModel with ChangeNotifier {
       ),
     );
 
-    return result;
+    return result.future;
   }
 
   Future<List<Person>> getPeopleFromLocalDatabase() async {

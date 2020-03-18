@@ -42,7 +42,7 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
     isLoading = true;
     try {
       final newPeopleData = await _viewModel.getPeople();
-      setPeopleAndLoading(newPeopleData, false);
+      setPeopleAndLoading(newPeopleData, true);
     } catch (e) {
       showDialogErrorWithMessage(
         context: context,
@@ -82,59 +82,59 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
     final favoritePeople = people.where((person) => person.isFavorite).toList();
     return _people.isEmpty
         ? Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text('Nobody to display!'),
-          SizedBox(
-            height: 20,
-          ),
-          RaisedButton(
-            child: Text('Retry'),
-            onPressed: _getPeople,
-          ),
-        ],
-      ),
-    )
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Nobody to display!'),
+                SizedBox(
+                  height: 20,
+                ),
+                RaisedButton(
+                  child: Text('Retry'),
+                  onPressed: _getPeople,
+                ),
+              ],
+            ),
+          )
         : Container(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(
-                Icons.person,
-                color: Colors.blueAccent,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text('${people.length}'),
-              SizedBox(
-                width: 100,
-              ),
-              Icon(
-                Icons.favorite,
-                color: Colors.red,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text('${favoritePeople.length}'),
-            ],
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          PeopleTinder(
-            initPeopleData: _people,
-          ),
-        ],
-      ),
-    );
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.person,
+                      color: Colors.blueAccent,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('${people.length}'),
+                    SizedBox(
+                      width: 100,
+                    ),
+                    Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('${favoritePeople.length}'),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                PeopleTinder(
+                  initPeopleData: _people,
+                ),
+              ],
+            ),
+          );
   }
 
   @override
@@ -147,12 +147,12 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
       ),
       body: _isLoading
           ? Center(
-        child: CircularProgressIndicator(),
-      )
+              child: CircularProgressIndicator(),
+            )
           : ChangeNotifierProvider.value(
-        value: _viewModel,
-        child: _buildContentWhenHasData(_people),
-      ),
+              value: _viewModel,
+              child: _buildContentWhenHasData(_people),
+            ),
     );
   }
 

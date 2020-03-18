@@ -19,11 +19,14 @@ Future<void> createRequest<T extends http.Response>(
     final response = await request;
     print('RESPONSE: ${response.body}');
     final responseData = json.decode(response.body) as Map<String, dynamic>;
-
+    print('RESPONSE: $responseData');
     responseHandler.onResponseSuccess(responseData["results"]);
   } on SocketException catch (_) {
     // SocketException: Network connection error?
     final exception = AppException.netWorkConnectException();
+    responseHandler.onResponseError(exception);
+  } on FormatException catch (_) {
+    final exception = AppException.formatException();
     responseHandler.onResponseError(exception);
   } catch (error) {
     // Other exception

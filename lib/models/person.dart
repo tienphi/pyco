@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pyco/bases/model.dart';
 import 'package:pyco/input.dart';
@@ -162,9 +164,11 @@ class Person extends BaseModel {
   Map<String, dynamic> toJsonSaveLocalDatabase() {
     Map<String, dynamic> result = {};
     final jsonData = _$PersonToJson(this);
-    final jsonName = personName.toJsonToSaveDatabase();
-    final jsonLocation = location.toJsonToSaveDatabase();
     final jsonDataKeys = jsonData.keys;
+    final personId = Random().nextInt(100).toString();
+
+    final jsonName = personName.toJsonToSaveDatabase(personId);
+    final jsonLocation = location.toJsonToSaveDatabase();
 
     jsonDataKeys.forEach(
       (key) {
@@ -201,6 +205,7 @@ class Person extends BaseModel {
       },
     );
 
+    result[PERSON_TABLE_ID_COLUMN] = personId;
     return result;
   }
 }
