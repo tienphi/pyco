@@ -21,6 +21,11 @@ class AppException implements Exception {
     message = 'RESPONSE ERROR: STATUS NOT EQUAL 0 OR 1';
   }
 
+  AppException.formatException() {
+    code = FORMAT_EXCEPTION_CODE;
+    message = 'FORMAT EXCEPTION ERROR: CHECK YOUR API';
+  }
+
   AppException.otherException(this.message) {
     code = OTHER_EXCEPTION_CODE;
   }

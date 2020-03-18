@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pyco/constants.dart';
-import 'package:pyco/database/local/database_creator.dart';
-import 'package:pyco/database/local/services.dart';
 import 'package:pyco/input.dart';
 import 'package:pyco/models/person.dart';
 import 'package:pyco/view_models/person.dart';
 import 'package:pyco/views/dialog.dart';
 import 'package:pyco/views/utilities.dart';
 import 'package:pyco/views/widgets/person_info_item.dart';
+
+import '../../database/remote/app_exception.dart';
 
 const _PERSON_KEY = 'person';
 const _POSITION_KEY = 'positon';
@@ -47,49 +47,23 @@ class _PeopleTinderState extends State<PeopleTinder> {
 
   void onDragLeft(Person person, bool isCallAPI) async {
     print('left person : ${person.id}');
-//    try {
-//      isLoading = true;
-//      final people = await _viewModel.getPeople();
-//      isLoading = false;
-//      print('last person : ${people.last.id}');
-//    } catch (e) {
-//      isLoading = false;
-//      showDialogErrorWithMessage(
-//        context: context,
-//        message: (e as AppException).message,
-//      );
-//      throw e;
-//    }
     if (isCallAPI) {
       print('lCall API : ${person.personName.personName}');
       // TODO FIX USE REAL DATA
-      List<Person> cloneList = [];
-
-      widget.initPeopleData.reversed.forEach((person) {
-        var newPerson = person;
-        newPerson.id = DateTime.now().toIso8601String();
-        newPerson.personName.lastName = '${newPerson.personName.lastName}1';
-        newPerson.isFavorite = false;
-        cloneList.add(newPerson);
-      });
-
       try {
-        for (Person person in cloneList) {
-          await SQLiteService.insert<Person>(
-            database: personDb,
-            dbName: PERSON_TABLE,
-            item: person,
-          );
-        }
+        isLoading = true;
+        final people = await _viewModel.getPeople();
+        isLoading = false;
+        print('last person : ${people.last.id}');
+        createBuildDataFromList(_buildData, people);
       } catch (e) {
+        isLoading = false;
         showDialogErrorWithMessage(
           context: context,
-          message: e.message,
+          message: (e as AppException).message,
         );
         throw e;
       }
-
-      createBuildDataFromList(_buildData, cloneList);
     } else {
       print('Not Call API : ${person.personName.personName}');
     }
@@ -140,18 +114,6 @@ class _PeopleTinderState extends State<PeopleTinder> {
   void didChangeDependencies() {
     if (_isInit) {
       _viewModel = Provider.of<PersonViewModel>(context, listen: false);
-//      isLoading = true;
-//      _viewModel.getPeopleFromLocalDatabase().then((list) {
-//        isLoading = false;
-//        _people = list;
-//      }).catchError((e) {
-//        isLoading = false;
-//        showDialogErrorWithMessage(
-//          context: context,
-//          message: (e as AppException).message,
-//        );
-//      });
-//      final people = widget.initPeopleData;
       final people = widget.initPeopleData;
 
       people.asMap().forEach((index, person) {

@@ -8,6 +8,7 @@ typedef ResponseErrorCallback = void Function(AppException);
 
 const NETWORK_CONNECT_EXCEPTION_CODE = 503;
 const STRANGE_RESPONSE_STATUS_EXCEPTION_CODE = 1000;
+const FORMAT_EXCEPTION_CODE = 1500;
 const OTHER_EXCEPTION_CODE = 2000;
 const RESPONSE_ERROR_ERROR_MESSAGE = 'response_error_error_message';
 const RESPONSE_ERROR_ERROR_CODE = 'response_error_error_code';

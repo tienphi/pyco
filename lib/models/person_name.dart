@@ -45,7 +45,7 @@ class PersonName extends BaseModel {
   @override
   Map<String, dynamic> toJson() => _$PersonNameToJson(this);
 
-  Map<String, dynamic> toJsonToSaveDatabase() {
+  Map<String, dynamic> toJsonToSaveDatabase(String id) {
     final jsonData = _$PersonNameToJson(this);
     final Map<String, dynamic> result = {};
     jsonData.keys.forEach((key) {
@@ -62,7 +62,7 @@ class PersonName extends BaseModel {
           }
         case 'last':
           {
-            result[PERSON_TABLE_LAST_NAME_COLUMN] = jsonData[key];
+            result[PERSON_TABLE_LAST_NAME_COLUMN] = '${jsonData[key]} #$id';
             break;
           }
         default:

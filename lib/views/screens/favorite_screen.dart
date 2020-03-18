@@ -31,69 +31,69 @@ class FavoriteScreen extends StatelessWidget {
                 break;
               case ConnectionState.done:
                 final favoritePeople =
-                snapshot.data.where((person) => person.isFavorite).toList();
+                    snapshot.data.where((person) => person.isFavorite).toList();
                 return favoritePeople.isEmpty
                     ? Center(
-                  child: Text('You not favorite any person!'),
-                )
+                        child: Text('You not favorite any person!'),
+                      )
                     : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('List person you favorite:'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Flexible(
-                      child: ListView.builder(
-                        itemCount: favoritePeople.length,
-                        itemBuilder: (ctx, index) {
-                          final person = favoritePeople[index];
-                          return Dismissible(
-                            background: Container(
-                              color: Colors.blue,
-                              child: Align(
-                                alignment: FractionalOffset.centerLeft,
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.red,
-                                ),
-                              ),
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text('List person you favorite:'),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Flexible(
+                            child: ListView.builder(
+                              itemCount: favoritePeople.length,
+                              itemBuilder: (ctx, index) {
+                                final person = favoritePeople[index];
+                                return Dismissible(
+                                  background: Container(
+                                    color: Colors.blue,
+                                    child: Align(
+                                      alignment: FractionalOffset.centerLeft,
+                                      child: Icon(
+                                        Icons.person,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                  onDismissed: (direction) {
+                                    if (direction ==
+                                        DismissDirection.startToEnd) {
+                                      Provider.of<PersonViewModel>(context,
+                                              listen: false)
+                                          .deleteItem(person.id);
+                                    }
+                                  },
+                                  direction: DismissDirection.startToEnd,
+                                  key: ValueKey(person.id),
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(person.picture),
+                                    ),
+                                    title: Text(
+                                        person.personName.personNameToCall),
+                                    trailing: IconButton(
+                                      onPressed: () =>
+                                          _unFavoritePerson(person.id),
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            onDismissed: (direction) {
-                              if (direction ==
-                                  DismissDirection.startToEnd) {
-                                Provider.of<PersonViewModel>(context,
-                                    listen: false)
-                                    .deleteItem(person.id);
-                              }
-                            },
-                            direction: DismissDirection.startToEnd,
-                            key: ValueKey(person.id),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                NetworkImage(person.picture),
-                              ),
-                              title: Text(
-                                  person.personName.personNameToCall),
-                              trailing: IconButton(
-                                onPressed: () =>
-                                    _unFavoritePerson(person.id),
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
+                          ),
+                        ],
+                      );
                 break;
             }
             return Container();
