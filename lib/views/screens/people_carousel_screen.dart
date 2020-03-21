@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pyco/constants.dart';
 import 'package:pyco/database/remote/app_exception.dart';
 import 'package:pyco/models/person.dart';
 import 'package:pyco/view_models/person.dart';
+import 'package:pyco/views/utilities.dart';
 
 import 'package:pyco/views/widgets/main_app_bar.dart';
 import 'package:pyco/views/widgets/person_info_icons.dart';
@@ -42,6 +44,16 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
     isLoading = true;
     try {
       final newPeopleData = await _viewModel.getPeople();
+      if (newPeopleData.length < 2) {
+        try {
+          while (newPeopleData.length < 2) {
+            final newData = await _viewModel.getPeople();
+            newPeopleData.addAll(newData);
+          }
+        } catch (e){
+          print(e.toString());
+        }
+      }
       setPeopleAndLoading(newPeopleData, true);
       isLoading = false;
     } catch (e) {
@@ -97,20 +109,65 @@ class _PeopleCarouselScreenState extends State<PeopleCarouselScreen>
             ),
           )
         : Container(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                    'Swipe to show new person, swipe right to add to favorite list'),
-                SizedBox(
-                  height: 10,
-                ),
-                PeopleTinder(
-                  initPeopleData: _people,
-                ),
-              ],
+            padding: const EdgeInsets.symmetric(
+              horizontal: APP_PADDING_HORIZONTAL,
+            ),
+            child: LayoutBuilder(
+              builder: (_, constraints) {
+                final parentHeight = constraints.maxHeight;
+                final parentWidth = constraints.maxWidth;
+
+                return Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                        'Swipe to show new person, swipe right to add to favorite list'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Flexible(
+                      child: PeopleTinder(
+                        width: getWidth(context) * 0.8,
+                        height: getHeight(context) * 0.6,
+                        initPeopleData: _people,
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Colors.blueAccent,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '${_viewModel.peopleCount}',
+                        ),
+                        SizedBox(
+                          width: 50,
+                        ),
+                        Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '${_viewModel.favoriteCount}',
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              },
             ),
           );
   }

@@ -10,7 +10,7 @@ import 'package:pyco/database/remote/services/person_api.dart';
 import 'package:pyco/models/person.dart';
 
 class PersonViewModel with ChangeNotifier {
-  List<Person> _people;
+  List<Person> _people = [];
 
   List<Person> get people => []..addAll(_people);
 
@@ -25,6 +25,14 @@ class PersonViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  int get favoriteCount =>
+      people
+          .where((person) => person.isFavorite)
+          .length;
+
+  int get peopleCount =>
+      people.length;
+
   Future<List<Person>> getPeopleFromServer() async {
     Completer<List<Person>> result = Completer<List<Person>>();
     await PersonService().getPeopleAPI(
@@ -37,17 +45,17 @@ class PersonViewModel with ChangeNotifier {
         },
       ),
     );
-
     return result.future;
   }
 
   Future<List<Person>> getPeopleFromLocalDatabase() async {
     try {
-      final people = await SQLiteService.getAll<Person>(
+      final peopleData = await SQLiteService.getAll<Person>(
         database: personDb,
         dbName: PERSON_TABLE,
       );
-      return people;
+      people = peopleData;
+      return peopleData;
     } catch (e) {
       throw e;
     }
@@ -55,15 +63,16 @@ class PersonViewModel with ChangeNotifier {
 
   Future<List<Person>> getPeople() async {
     try {
-      final people = await getPeopleFromServer();
-      for (Person person in people) {
+      final peopleData = await getPeopleFromServer();
+      for (Person person in peopleData) {
         await SQLiteService.insert<Person>(
           database: personDb,
           dbName: PERSON_TABLE,
           item: person,
         );
       }
-      return people;
+      _people.addAll(peopleData);
+      return peopleData;
     } catch (e) {
       throw e;
     }
